@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flight Price Prediction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;   /* 100% viewport height */
+  margin: 0;
+  color: #fff;
+  overflow: hidden; /* prevent any page scroll */
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(118, 75, 162, 0.6);
+  width: 100%;
+  max-width: 500px;
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+
+  height: 100vh; /* slightly smaller than viewport */
+  overflow-y: auto; /* scroll inside container if needed */
+}
+
+  h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-weight: 700;
+    color: Black;
+    text-shadow: 0 0 8px #d3c9ff;
+  }
+
+  label {
+    display: block;
+    margin-top: 16px;
+    font-weight: 600;
+    color: white;
+  }
+
+  select, button {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #3e2e6f;
+    font-weight: 600;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  select:hover, select:focus {
+    background-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 10px #9f7eff;
+    outline: none;
+    color: #2a1f4a;
+  }
+
+  button {
+    background: linear-gradient(45deg, #9f7eff, #764ba2);
+    color: black;
+    font-weight: 700;
+    margin-top: 28px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(159, 126, 255, 0.7);
+    transition: background 0.4s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background: linear-gradient(45deg, #764ba2, #9f7eff);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(159, 126, 255, 0.9);
+  }
+
+  #result {
+  margin-top: 28px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  color: black;
+  text-shadow: none;
+}
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Flight Price Prediction</h2>
+
+    <form id="predictForm">
+      <label for="stops">Number of Stops:</label>
+      <select id="stops" name="stops">
+        <option value="3">Non-stop</option>
+        <option value="2">1 Stop</option>
+        <option value="1">2 Stops</option>
+        <option value="0">3 Stops</option>
+      </select>
+
+      <label for="class">Class:</label>
+      <select id="class" name="class">
+        <option value="0">Economy</option>
+        <option value="1">Business</option>
+      </select>
+
+      <label for="airline">Airline:</label>
+      <select id="airline" name="airline">
+        <option value="AirAsia">AirAsia</option>
+        <option value="Air_India">Air India</option>
+        <option value="GO_FIRST">GO FIRST</option>
+        <option value="Indigo">Indigo</option>
+        <option value="SpiceJet">SpiceJet</option>
+        <option value="Vistara">Vistara</option>
+      </select>
+
+      <label for="source">Source City:</label>
+      <select id="source" name="source">
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Mumbai">Mumbai</option>
+      </select>
+
+      <label for="destination">Destination City:</label>
+      <select id="destination" name="destination">
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Mumbai">Mumbai</option>
+      </select>
+
+      <label for="departure">Departure Time:</label>
+      <select id="departure" name="departure">
+        <option value="Morning">Morning</option>
+        <option value="Afternoon">Afternoon</option>
+        <option value="Evening">Evening</option>
+        <option value="Night">Night</option>
+        <option value="Early_Morning">Early Morning</option>
+        <option value="Late_Night">Late Night</option>
+      </select>
+
+      <label for="arrival">Arrival Time:</label>
+      <select id="arrival" name="arrival">
+        <option value="Morning">Morning</option>
+        <option value="Afternoon">Afternoon</option>
+        <option value="Evening">Evening</option>
+        <option value="Night">Night</option>
+        <option value="Early_Morning">Early Morning</option>
+        <option value="Late_Night">Late Night</option>
+      </select>
+
+      <button type="submit">Predict Price</button>
+    </form>
+
+    <h3 id="result"></h3>
+  </div>
+
+  <script>
+    document.getElementById('predictForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const stops = parseInt(document.getElementById('stops').value);
+      const travelClass = parseInt(document.getElementById('class').value);
+      const airline = document.getElementById('airline').value;
+      const source = document.getElementById('source').value;
+      const destination = document.getElementById('destination').value;
+      const departure = document.getElementById('departure').value;
+      const arrival = document.getElementById('arrival').value;
+
+      const data = {
+        stops: stops,
+        class: travelClass,
+        duration: 120,
+        days_left: 10
+      };
+
+      const airlines = ["AirAsia", "Air_India", "GO_FIRST", "Indigo", "SpiceJet", "Vistara"];
+      airlines.forEach(a => {
+        data['airline_' + a] = (a === airline) ? 1 : 0;
+      });
+
+      const cities = ["Bangalore", "Chennai", "Delhi", "Hyderabad", "Kolkata", "Mumbai"];
+      cities.forEach(c => {
+        data['source_' + c] = (c === source) ? 1 : 0;
+        data['destination_' + c] = (c === destination) ? 1 : 0;
+      });
+
+      const times = ["Afternoon", "Early_Morning", "Evening", "Late_Night", "Morning", "Night"];
+      times.forEach(t => {
+        data['departure_' + t] = (t === departure) ? 1 : 0;
+        data['arrival_' + t] = (t === arrival) ? 1 : 0;
+      });
+
+      fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        const usd = (result.predicted_price / 83).toFixed(2);
+        document.getElementById('result').innerText = 'Predicted Price: $' + usd;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerText = 'Error fetching prediction.';
+      });
+    });
+  </script>
+</body>
+</html>

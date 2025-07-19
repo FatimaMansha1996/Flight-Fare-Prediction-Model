@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="">
 <head>
   <title>Flight Price Prediction</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
   width: 100%;
   max-width: 500px;
   backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 
   height: 100vh; /* slightly smaller than viewport */
   overflow-y: auto; /* scroll inside container if needed */
@@ -211,6 +211,7 @@
       })
       .then(response => response.json())
       .then(result => {
+        result.predicted_price = undefined;
         const usd = (result.predicted_price / 83).toFixed(2);
         document.getElementById('result').innerText = 'Predicted Price: $' + usd;
       })
